@@ -12,18 +12,22 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
+@Table(name = "USER_DETAIL")
 public class UserDetail {
     @Id
     @NonNull
     @SequenceGenerator(name="user_generator", sequenceName="USER_DETAIL_SEQ", allocationSize=1)
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="user_generator")
-    private Long id;
+    @Column(name = "USER_ID")
+    private Long userId;
+    @Column(name = "USER_NAME")
     private String name;
+    @Column(name = "EMAIL")
     private String email;
+    @Column(name = "PROJECT")
     private String project;
+    @Column(name = "STATUS")
     private boolean status;
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private Set<UserServerDetail> userServerDetails;
 
 
 }
