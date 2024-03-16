@@ -22,8 +22,6 @@ public class UserDetail {
     private Long id;
     @Column(name = "USER_NAME")
     private String name;
-    @Column(name = "USER_PASS")
-    private String pass;
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "PROJECT")

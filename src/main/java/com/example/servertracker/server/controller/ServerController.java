@@ -49,6 +49,7 @@ public class ServerController {
         return new ResponseEntity<>(serverDashbordDetail,HttpStatus.OK);
     }
 
+
 	    private Map<String, DBConnectionInfo> getDBDetailsMap() {
         Map<String, DBConnectionInfo> dbDetailsMap = new HashMap<String, DBConnectionInfo>();
         List<UserServerDetail> userServerDetails = userService.getAllUserServer();
@@ -213,6 +214,12 @@ public class ServerController {
 
         System.out.println(" Final Result: "+result);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @GetMapping("/getDashbordDetail")
+    public ResponseEntity<?> getServerDashbordDetail(@RequestParam Long userId){
+        List<ServerDashbordDetail> dashbordDetailList =serverService.getServerDashbordDetail(userId);
+        return new ResponseEntity<>(dashbordDetailList,HttpStatus.OK);
+
     }
 
 

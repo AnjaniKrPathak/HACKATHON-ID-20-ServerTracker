@@ -1,5 +1,6 @@
 package com.example.servertracker.user.service;
 
+import com.example.servertracker.server.entity.ServerDashbordDetail;
 import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.repo.UserDetailRepo;
@@ -43,5 +44,14 @@ public class UserServiceImpl implements IUserService{
         List<UserServerDetail> userServerDetails=userServerDetailRepo.findByUserId(userId);
 
         return userServerDetails;
+    }
+
+    @Override
+    public List<ServerDashbordDetail> getServerDashbordDetail(Long userId) {
+        List<UserServerDetail> userDetailList=getUserServerBasedOnUserId(userId);
+        for(UserServerDetail userServerDetail:userDetailList){
+
+        }
+        return null;
     }
 }

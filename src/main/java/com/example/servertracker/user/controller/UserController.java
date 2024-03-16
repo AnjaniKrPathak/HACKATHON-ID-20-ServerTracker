@@ -4,11 +4,19 @@ import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
 import org.apache.catalina.User;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,11 +99,41 @@ public class UserController {
         List<UserServerDetail> userServerDetails=userService.getAllUserServer();
         return userServerDetails;
     }
-    @GetMapping("/getUserServerBasedOnUserId/{userId}")
-    public ResponseEntity<?> getUserServerDetailBasedOnUserId(@PathVariable Long userId ){
+    @GetMapping("/getUserServerBasedOnUserId")
+    public ResponseEntity<?> getUserServerDetailBasedOnUserId(@RequestParam Long userId ){
      List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
         return new ResponseEntity<>(userServerDetails,HttpStatus.OK);
     }
 
+
+    @PostMapping("/createUserWithCSV")
+    public ResponseEntity<?> createUserWithCSV(@RequestParam ("file") MultipartFile file){
+
+        List<String> response = new ArrayList<>();
+        try {
+            BufferedReader fileReader= new BufferedReader(new InputStreamReader(file.getInputStream()));
+            CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for(CSVRecord csvRecord : csvRecords){
+                UserDetail user=new UserDetail();
+                user.setName(csvRecord.get("name"));
+                user.setEmail(csvRecord.get("email"));
+                user.setProject(csvRecord.get("project"));
+                user.setPassword("123456");
+
+
+                try{
+                    UserDetail userDetail= userService.addUserDetail(user);
+                    response.add("Created User "+userDetail.getName()+"with id:"+userDetail.getEmail());
+                }
+                catch (Exception e){
+                    response.add("Unable to created User "+e.getMessage());
+                }
+            }
+        }catch (IOException e){
+
+        }
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 
 }

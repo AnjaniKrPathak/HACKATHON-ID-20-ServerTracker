@@ -5,6 +5,8 @@ import com.example.servertracker.server.entity.ServerDashbordDetail;
 import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
 import com.example.servertracker.server.entity.ServerPocAmCacheDetail;
 
+import java.util.List;
+
 public interface IServerService {
 
     ServerPocAmCacheDetail saveServerPocAMCachedetail(ServerPocAmCacheDetail serverPocAmCacheDetail);
@@ -14,4 +16,7 @@ public interface IServerService {
     ServerAppSpaceDetail saveServerAppSpaceDetail(ServerAppSpaceDetail serverAppSpaceDetail);
 
     ServerDashbordDetail saveServerDashbordDetail(ServerDashbordDetail dashbordDetail);
+
+
+    List<ServerDashbordDetail> getServerDashbordDetail(Long userId);
 }

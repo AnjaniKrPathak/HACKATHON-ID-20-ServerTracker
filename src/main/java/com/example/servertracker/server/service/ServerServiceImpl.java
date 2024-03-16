@@ -8,8 +8,13 @@ import com.example.servertracker.server.repo.ServerAppSpaceDetailRepo;
 import com.example.servertracker.server.repo.ServerDashbordDetailRepo;
 import com.example.servertracker.server.repo.ServerDbTableSpaceDetailRepo;
 import com.example.servertracker.server.repo.ServerPocAMCacheDetailRepo;
+import com.example.servertracker.user.entity.UserServerDetail;
+import com.example.servertracker.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ServerServiceImpl implements IServerService{
@@ -21,6 +26,8 @@ public class ServerServiceImpl implements IServerService{
     ServerAppSpaceDetailRepo appSpaceDetailRepo;
     @Autowired
     ServerDashbordDetailRepo dashbordDetrailRepo;
+    @Autowired
+    IUserService userService;
 
 
     @Override
@@ -43,5 +50,16 @@ public class ServerServiceImpl implements IServerService{
     public ServerDashbordDetail saveServerDashbordDetail(ServerDashbordDetail dashbordDetail) {
         return dashbordDetrailRepo.save(dashbordDetail);
 
+    }
+
+    @Override
+    public List<ServerDashbordDetail> getServerDashbordDetail(Long userId) {
+        List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
+        List<ServerDashbordDetail> serverDashbordDetails=new ArrayList<>();
+        serverDashbordDetails =dashbordDetrailRepo.findByServerIp("10.109.35.199");
+        for(UserServerDetail userServerDetail:userServerDetails){
+           // serverDashbordDetails =dashbordDetrailRepo.findByServerIp(userServerDetail.getServerIp());
+        }
+        return serverDashbordDetails;
     }
 }
