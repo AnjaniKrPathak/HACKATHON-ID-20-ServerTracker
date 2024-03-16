@@ -25,4 +25,5 @@ public class ServerDashbordDetail {
     private String serverIp;
     @Column(name = "LIVE_BILLING_CATALOG")
     private String liveBillingCatalog;
+
 }

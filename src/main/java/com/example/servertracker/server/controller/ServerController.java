@@ -1,9 +1,6 @@
 package com.example.servertracker.server.controller;
 
-import com.example.servertracker.server.entity.ServerAppSpaceDetail;
-import com.example.servertracker.server.entity.ServerDashbordDetail;
-import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
-import com.example.servertracker.server.entity.ServerPocAmCacheDetail;
+import com.example.servertracker.server.entity.*;
 import com.example.servertracker.server.service.IServerService;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
@@ -11,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.servertracker.server.entity.DBConnectionInfo;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -220,6 +216,12 @@ public class ServerController {
         List<ServerDashbordDetail> dashbordDetailList =serverService.getServerDashbordDetail(userId);
         return new ResponseEntity<>(dashbordDetailList,HttpStatus.OK);
 
+    }
+    @GetMapping("/serverLiveStatusReport")
+    public ResponseEntity<?> getServerLiveStatusReport(@RequestParam Long userId){
+        List<ServerAppLiveStatusDetail> serverAppLiveStatusDetails=new ArrayList<>();
+        serverAppLiveStatusDetails.add(new ServerAppLiveStatusDetail(10,6,4));
+        return new ResponseEntity<>(serverAppLiveStatusDetails,HttpStatus.OK);
     }
 
 
