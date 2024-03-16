@@ -1,5 +1,6 @@
 package com.example.servertracker.server.controller;
 
+import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
 import com.example.servertracker.server.entity.ServerPocAmCacheDetail;
 import com.example.servertracker.server.service.IServerService;
 import com.example.servertracker.user.entity.UserServerDetail;
@@ -25,8 +26,14 @@ public class ServerController {
               ServerPocAmCacheDetail caheDetail= serverService.saveServerPocAMCachedetail(serverPocAmCacheDetail);
                return new ResponseEntity<>(caheDetail, HttpStatus.OK);
 
-
+    }
+    @PostMapping("/saveServerDbTableSpaceDetail")
+    public ResponseEntity<?> saveServerDbTableSpaceDetail(@RequestBody ServerDbTableSpaceDetail serverDbTableSpaceDetail){
+        ServerDbTableSpaceDetail dbTableSpaceDetail=serverService.saveServerDbTableSpaceDetail(serverDbTableSpaceDetail);
+        return new ResponseEntity<>(dbTableSpaceDetail,HttpStatus.OK);
 
     }
+
+
 
 }

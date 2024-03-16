@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-@NoArgsConstructor
+
 @AllArgsConstructor
 @Table(name = "SERVER_POC_AM_CACHE_DETAIL")
 @Entity
@@ -19,8 +19,12 @@ public class ServerPocAmCacheDetail {
     @Column(name = "ID")
     private Long id;
     private  String serverIp;
+    @Column(name ="CACHE_OBJECT" )
     private String cacheObject;
+    @Column(name = "CACHE_NAME")
     private String cacheName;
+    @Column(name = "CACHE_STATUS")
     private String cacheStatus;
+    @Column(name = "CREATED_WHEN")
     private String createdWhen;
 }
