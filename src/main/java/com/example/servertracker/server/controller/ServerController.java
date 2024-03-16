@@ -230,7 +230,7 @@ public class ServerController {
             return new ResponseEntity<>(serverDashbordDetailMap, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(dashbordDetailList,HttpStatus.OK);
+
 
     }
     @GetMapping("/serverLiveStatusReport")
