@@ -28,6 +28,8 @@ public class UserDetail {
     private String project;
     @Column(name = "STATUS")
     private boolean status;
+    @Column(name = "PASSWORD")
+    private String password;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<UserServerDetail> userServerList;
 
