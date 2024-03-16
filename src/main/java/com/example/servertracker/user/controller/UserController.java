@@ -132,13 +132,44 @@ public class UserController {
                     response.add("Created User "+userDetail.getName()+"with id:"+userDetail.getEmail());
                 }
                 catch (Exception e){
-                    response.add("Unable to created User "+e.getMessage());
+                    response.add("Unable to create User "+e.getMessage());
                 }
             }
         }catch (IOException e){
 
         }
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/createUserServerWithCSV")
+    public ResponseEntity<?> createServerWithCSV(@RequestParam ("file") MultipartFile file) throws IOException {
+
+        List<String> response = new ArrayList<>();
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+        Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+        for (CSVRecord csvRecord : csvRecords) {
+            UserServerDetail userServerDetail = new UserServerDetail();
+            userServerDetail.setDbServerPort(csvRecord.get("DbServerPort"));
+            userServerDetail.setAppServerPort(csvRecord.get("AppServerPort"));
+            userServerDetail.setAppUserPassword(csvRecord.get("AppUserPassword"));
+            userServerDetail.SetServerIp(csvRecord.get("ServerIp"));
+
+
+            try {
+                UserServerDetail serverDetail= userService.addUserServerDetail(userServerDetail);
+                response.add("Created Server  " +serverDetail + "with id:" + serverDetail.getServerIp());
+            } catch (Exception e) {
+                response.add("Unable to created Server  " +userServerDetail.getServerIp() + e.getMessage());
+            }
+
+
+
+
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }
