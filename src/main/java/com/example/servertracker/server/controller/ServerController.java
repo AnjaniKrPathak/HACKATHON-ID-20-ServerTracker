@@ -19,7 +19,7 @@ public class ServerController {
     @Autowired
     IServerService serverService;
     @PostMapping("/saveServerPocAMCacheDetail")
-    public ResponseEntity<?> savePocAMCacheStatus( @RequestBody ServerPocAmCacheDetail serverPocAmCacheDetail){
+    public ResponseEntity<?> savePocAMCacheStatus(@RequestBody ServerPocAmCacheDetail serverPocAmCacheDetail){
 
 
               ServerPocAmCacheDetail caheDetail= serverService.saveServerPocAMCachedetail(serverPocAmCacheDetail);
