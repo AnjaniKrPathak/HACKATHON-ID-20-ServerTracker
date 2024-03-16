@@ -214,6 +214,22 @@ public class ServerController {
     @GetMapping("/getDashbordDetail")
     public ResponseEntity<?> getServerDashbordDetail(@RequestParam Long userId){
         List<ServerDashbordDetail> dashbordDetailList =serverService.getServerDashbordDetail(userId);
+        Map<String,Object> serverDashbordDetailMap=new LinkedHashMap<String,Object>();
+        if(!dashbordDetailList.isEmpty()){
+
+
+
+            serverDashbordDetailMap.put("statusCode", HttpStatus.OK.value());
+            serverDashbordDetailMap.put("data",dashbordDetailList);
+            return new ResponseEntity<>(serverDashbordDetailMap, HttpStatus.OK);
+        }
+        else {
+            serverDashbordDetailMap.clear();
+            serverDashbordDetailMap.put("status",0);
+            serverDashbordDetailMap.put("message","Server Not Added");
+            return new ResponseEntity<>(serverDashbordDetailMap, HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(dashbordDetailList,HttpStatus.OK);
 
     }
@@ -221,7 +237,22 @@ public class ServerController {
     public ResponseEntity<?> getServerLiveStatusReport(@RequestParam Long userId){
         List<ServerAppLiveStatusDetail> serverAppLiveStatusDetails=new ArrayList<>();
         serverAppLiveStatusDetails.add(new ServerAppLiveStatusDetail(10,6,4));
-        return new ResponseEntity<>(serverAppLiveStatusDetails,HttpStatus.OK);
+        Map<String,Object> mapLiveStatus=new LinkedHashMap<String,Object>();
+        if(!serverAppLiveStatusDetails.isEmpty()){
+
+
+
+            mapLiveStatus.put("statusCode", HttpStatus.OK.value());
+            mapLiveStatus.put("data",serverAppLiveStatusDetails);
+            return new ResponseEntity<>(mapLiveStatus, HttpStatus.OK);
+        }
+        else {
+            mapLiveStatus.clear();
+            mapLiveStatus.put("status",0);
+            mapLiveStatus.put("message","Server Not Added");
+            return new ResponseEntity<>(mapLiveStatus, HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
