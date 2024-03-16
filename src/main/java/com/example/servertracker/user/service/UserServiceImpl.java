@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public List<UserServerDetail> getUserServerBasedOnUserId(Long userId) {
-        List<UserServerDetail> userServerDetails=userServerDetailRepo.getUserServerDetailByUserId(userId);
+        List<UserServerDetail> userServerDetails=userServerDetailRepo.findByUserId(userId);
 
         return userServerDetails;
     }

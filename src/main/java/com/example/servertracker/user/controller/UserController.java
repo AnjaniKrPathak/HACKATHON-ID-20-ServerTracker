@@ -92,7 +92,7 @@ public class UserController {
         return userServerDetails;
     }
     @GetMapping("/getUserServerBasedOnUserId/{userId}")
-    public ResponseEntity<?> getUserServerDetailBasedOnUserId( Long userId ){
+    public ResponseEntity<?> getUserServerDetailBasedOnUserId(@PathVariable Long userId ){
      List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
         return new ResponseEntity<>(userServerDetails,HttpStatus.OK);
     }
