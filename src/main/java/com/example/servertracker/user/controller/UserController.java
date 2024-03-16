@@ -32,6 +32,7 @@ public class UserController {
 
     }
     @PostMapping("/addUSer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUser(@RequestBody UserDetail userDetail){
 
       UserDetail ud= userService.addUserDetail(userDetail);
@@ -55,6 +56,7 @@ public class UserController {
 
     }
     @PutMapping("/updateUser")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> updateUser(@RequestBody UserDetail userDetail){
 
         UserDetail ud= userService.updateUserDetail(userDetail);
@@ -76,6 +78,7 @@ public class UserController {
 
     }
     @PostMapping("/addUserServer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUserServer(@RequestBody UserServerDetail userServerDetail){
         UserServerDetail userServerDetail1=userService.addUserServerDetail(userServerDetail);
         Map<String,Object> map=new LinkedHashMap<String,Object>();
@@ -95,6 +98,7 @@ public class UserController {
         }
     }
     @GetMapping("/getAllUserServer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public List<UserServerDetail> getUserServerDetail(){
         List<UserServerDetail> userServerDetails=userService.getAllUserServer();
         return userServerDetails;
@@ -107,6 +111,7 @@ public class UserController {
 
 
     @PostMapping("/createUserWithCSV")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> createUserWithCSV(@RequestParam ("file") MultipartFile file){
 
         List<String> response = new ArrayList<>();

@@ -21,6 +21,7 @@ public class ServerController {
     @Autowired
     IServerService serverService;
     @PostMapping("/saveServerPocAMCacheDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> savePocAMCacheStatus(@RequestBody ServerPocAmCacheDetail serverPocAmCacheDetail){
 
 
@@ -28,18 +29,22 @@ public class ServerController {
                return new ResponseEntity<>(caheDetail, HttpStatus.OK);
 
     }
+
     @PostMapping("/saveServerDbTableSpaceDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> saveServerDbTableSpaceDetail(@RequestBody ServerDbTableSpaceDetail serverDbTableSpaceDetail){
         ServerDbTableSpaceDetail dbTableSpaceDetail=serverService.saveServerDbTableSpaceDetail(serverDbTableSpaceDetail);
         return new ResponseEntity<>(dbTableSpaceDetail,HttpStatus.OK);
 
     }
     @PostMapping("/saveServerAppSpaceDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> saveServerAppSpaceDetail(@RequestBody ServerAppSpaceDetail serverAppSpaceDetail){
         ServerAppSpaceDetail appSpaceDetail=serverService.saveServerAppSpaceDetail(serverAppSpaceDetail);
         return new ResponseEntity<>(serverAppSpaceDetail,HttpStatus.OK);
     }
     @PostMapping("/saveServerDashbordDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
     public  ResponseEntity<?> saveServerDashbordDetail(@RequestBody ServerDashbordDetail dashbordDetail){
         ServerDashbordDetail serverDashbordDetail =serverService.saveServerDashbordDetail(dashbordDetail);
         return new ResponseEntity<>(serverDashbordDetail,HttpStatus.OK);
@@ -73,6 +78,7 @@ public class ServerController {
 
 
     @GetMapping("/getAllDBServer")
+    @CrossOrigin(origins = "http://localhost:3000")
 //    public List<UserServerDetail> getUserServerDetail(){
     public ResponseEntity<?> getDBServerDetail() throws Exception {
         Map<String, DBConnectionInfo> hashMap = getDBDetailsMap();
@@ -102,6 +108,7 @@ public class ServerController {
 
 
     @GetMapping("/getAllDBServer/{serverIdAddress}")
+    @CrossOrigin(origins = "http://localhost:3000")
 //    public List<UserServerDetail> getUserServerDetailByServerIP(@PathVariable String serverIdAddress){
     public ResponseEntity<?> getUserServerDetailByServerIP(@PathVariable String serverIdAddress) throws Exception {
         StringBuilder  result=new StringBuilder();
@@ -176,6 +183,7 @@ public class ServerController {
     }
 
     @GetMapping("/checkServerHealth")
+    @CrossOrigin(origins = "http://localhost:3000")
     public  ResponseEntity<?>  getServerHealth(){
         List<UserServerDetail> userServerDetails=userService.getAllUserServer();
         RestTemplate restTemplate = new RestTemplate();
@@ -212,6 +220,7 @@ public class ServerController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/getDashbordDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getServerDashbordDetail(@RequestParam Long userId){
         List<ServerDashbordDetail> dashbordDetailList =serverService.getServerDashbordDetail(userId);
         Map<String,Object> serverDashbordDetailMap=new LinkedHashMap<String,Object>();
@@ -234,6 +243,7 @@ public class ServerController {
 
     }
     @GetMapping("/serverLiveStatusReport")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getServerLiveStatusReport(@RequestParam Long userId){
         List<ServerAppLiveStatusDetail> serverAppLiveStatusDetails=new ArrayList<>();
         serverAppLiveStatusDetails.add(new ServerAppLiveStatusDetail(10,6,4));
