@@ -245,8 +245,8 @@ public class ServerController {
     @GetMapping("/serverLiveStatusReport")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getServerLiveStatusReport(@RequestParam Long userId){
-        List<ServerAppLiveStatusDetail> serverAppLiveStatusDetails=new ArrayList<>();
-        serverAppLiveStatusDetails.add(new ServerAppLiveStatusDetail(10,6,4));
+        List<ServerAppLiveStatusReport> serverAppLiveStatusDetails=new ArrayList<>();
+        serverAppLiveStatusDetails.add(new ServerAppLiveStatusReport(10,6,4));
         Map<String,Object> mapLiveStatus=new LinkedHashMap<String,Object>();
         if(!serverAppLiveStatusDetails.isEmpty()){
 
@@ -264,6 +264,52 @@ public class ServerController {
         }
 
     }
+    @GetMapping("/appSpaceStatusReport")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> getAppStatusReport(@RequestParam Long userId){
+        List<ServerAppSpaceReport> serverAppLiveStatusDetails=new ArrayList<>();
+        serverAppLiveStatusDetails.add(new ServerAppSpaceReport(10,6,3,1));
+        Map<String,Object> mapAppSpaceReport=new LinkedHashMap<String,Object>();
+        if(!serverAppLiveStatusDetails.isEmpty()){
+
+
+
+            mapAppSpaceReport.put("statusCode", HttpStatus.OK.value());
+            mapAppSpaceReport.put("data",serverAppLiveStatusDetails);
+            return new ResponseEntity<>(mapAppSpaceReport, HttpStatus.OK);
+        }
+        else {
+            mapAppSpaceReport.clear();
+            mapAppSpaceReport.put("status",0);
+            mapAppSpaceReport.put("message","Server Not Added");
+            return new ResponseEntity<>(mapAppSpaceReport, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping("/dbSpaceStatusReport")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> getDbStatusReport(@RequestParam Long userId){
+        List<ServerAppDbSpaceReport> serverAppDbSpaceReports=new ArrayList<>();
+        serverAppDbSpaceReports.add(new ServerAppDbSpaceReport(10,2,5,3));
+        Map<String,Object> mapDbSpaceReport=new LinkedHashMap<String,Object>();
+        if(!serverAppDbSpaceReports.isEmpty()){
+
+
+
+            mapDbSpaceReport.put("statusCode", HttpStatus.OK.value());
+            mapDbSpaceReport.put("data",serverAppDbSpaceReports);
+            return new ResponseEntity<>(mapDbSpaceReport, HttpStatus.OK);
+        }
+        else {
+            mapDbSpaceReport.clear();
+            mapDbSpaceReport.put("status",0);
+            mapDbSpaceReport.put("message","Server Not Added");
+            return new ResponseEntity<>(mapDbSpaceReport, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 
 
 }

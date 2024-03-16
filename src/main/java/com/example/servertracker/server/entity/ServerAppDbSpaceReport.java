@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServerAppLiveStatusDetail {
-    private  int totalServer;
-    private int liveServeCount;
-    private int downServerCount;
+public class ServerAppDbSpaceReport {
+    private int totalServer;
+    private int dbSpaceGreen;
+    private int dbSpaceYellow;
+    private int dbSpaceRed;
 
 }
