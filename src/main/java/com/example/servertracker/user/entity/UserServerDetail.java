@@ -35,6 +35,14 @@ public class UserServerDetail {
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ,nullable = false)
     private UserDetail user;
 
-
+    public void SetServerIp(String serverIp) {
+        this.serverIp=serverIp;
+    }
+    public void SetDbUserName(String dbUserName) {
+        this.dbUserName=dbUserName;
+    }
+    public void SetDbUserPassword(String dbUserPassword) {
+        this.dbUserPassword=dbUserPassword;
+    }
 
 }
