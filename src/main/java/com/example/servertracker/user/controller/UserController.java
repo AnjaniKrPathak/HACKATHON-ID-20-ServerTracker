@@ -163,6 +163,7 @@ public class UserController {
             userServerDetail.setAppUserPassword(csvRecord.get("AppUserName"));
             userServerDetail.setAppUserPassword(csvRecord.get("DbUserName"));
             userServerDetail.setAppUserPassword(csvRecord.get("DbUserPassword"));
+            userServerDetail.setUser(new UserDetail(Long.parseLong(csvRecord.get("User"))));
 
             userServerDetail.SetServerIp(csvRecord.get("ServerIp"));
 
