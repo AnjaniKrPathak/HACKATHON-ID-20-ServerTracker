@@ -103,6 +103,8 @@ public class UserController {
         List<UserServerDetail> userServerDetails=userService.getAllUserServer();
         return userServerDetails;
     }
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getUserServerBasedOnUserId")
     public ResponseEntity<?> getUserServerDetailBasedOnUserId(@RequestParam Long userId ){
      List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
