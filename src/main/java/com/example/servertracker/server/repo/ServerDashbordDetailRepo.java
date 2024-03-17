@@ -10,5 +10,5 @@ import java.util.List;
 public interface ServerDashbordDetailRepo extends JpaRepository<ServerDashbordDetail,Long> {
 
 
-    List<ServerDashbordDetail> findByServerIp(String serverIp);
+    ServerDashbordDetail findByServerIp(String serverIp);
 }

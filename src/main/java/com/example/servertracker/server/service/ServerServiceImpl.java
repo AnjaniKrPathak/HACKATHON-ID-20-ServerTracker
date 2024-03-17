@@ -62,12 +62,18 @@ public class ServerServiceImpl implements IServerService{
     @Override
     public List<ServerDashbordDetail> getServerDashbordDetail(Long userId) {
         List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
+        System.out.println("user Server Details "+userServerDetails.size());
         List<ServerDashbordDetail> serverDashbordDetails=new ArrayList<>();
-        serverDashbordDetails =dashbordDetrailRepo.findByServerIp("10.109.35.199");
+       // serverDashbordDetails =dashbordDetrailRepo.findByServerIp("10.109.35.199");
+        List<ServerDashbordDetail> serverDashbordDetailList=new ArrayList<>();
         for(UserServerDetail userServerDetail:userServerDetails){
-           // serverDashbordDetails =dashbordDetrailRepo.findByServerIp(userServerDetail.getServerIp());
+            System.out.println("Server IP"+userServerDetail.getServerIp());
+
+            ServerDashbordDetail serverDashbordDetail1 =dashbordDetrailRepo.findByServerIp(userServerDetail.getServerIp());
+            serverDashbordDetailList.add(serverDashbordDetail1);
+            System.out.println("Dashbord Details Size"+serverDashbordDetails.size());
         }
-        return serverDashbordDetails;
+        return serverDashbordDetailList;
     }
 
     @Override
