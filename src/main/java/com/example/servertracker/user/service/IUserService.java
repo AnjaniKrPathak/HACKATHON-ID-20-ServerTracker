@@ -1,10 +1,10 @@
 package com.example.servertracker.user.service;
 
+import com.example.servertracker.server.entity.ServerDashbordDetail;
 import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserServerDetail;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserService {
 
@@ -17,4 +17,6 @@ public interface IUserService {
     List<UserServerDetail> getAllUserServer();
 
      List<UserServerDetail> getUserServerBasedOnUserId(Long userId);
+
+    List<ServerDashbordDetail> getServerDashbordDetail(Long userId);
 }

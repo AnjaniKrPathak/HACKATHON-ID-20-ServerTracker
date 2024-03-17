@@ -22,14 +22,14 @@ public class UserDetail {
     private Long id;
     @Column(name = "USER_NAME")
     private String name;
-    @Column(name = "USER_PASS")
-    private String pass;
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "PROJECT")
     private String project;
     @Column(name = "STATUS")
     private boolean status;
+    @Column(name = "PASSWORD")
+    private String password;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<UserServerDetail> userServerList;
 

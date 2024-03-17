@@ -4,11 +4,19 @@ import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
 import org.apache.catalina.User;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +32,7 @@ public class UserController {
 
     }
     @PostMapping("/addUSer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUser(@RequestBody UserDetail userDetail){
 
       UserDetail ud= userService.addUserDetail(userDetail);
@@ -47,6 +56,7 @@ public class UserController {
 
     }
     @PutMapping("/updateUser")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> updateUser(@RequestBody UserDetail userDetail){
 
         UserDetail ud= userService.updateUserDetail(userDetail);
@@ -68,6 +78,7 @@ public class UserController {
 
     }
     @PostMapping("/addUserServer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUserServer(@RequestBody UserServerDetail userServerDetail){
         UserServerDetail userServerDetail1=userService.addUserServerDetail(userServerDetail);
         Map<String,Object> map=new LinkedHashMap<String,Object>();
@@ -87,15 +98,78 @@ public class UserController {
         }
     }
     @GetMapping("/getAllUserServer")
+    @CrossOrigin(origins = "http://localhost:3000")
     public List<UserServerDetail> getUserServerDetail(){
         List<UserServerDetail> userServerDetails=userService.getAllUserServer();
         return userServerDetails;
     }
-    @GetMapping("/getUserServerBasedOnUserId/{userId}")
-    public ResponseEntity<?> getUserServerDetailBasedOnUserId(@PathVariable Long userId ){
+    @GetMapping("/getUserServerBasedOnUserId")
+    public ResponseEntity<?> getUserServerDetailBasedOnUserId(@RequestParam Long userId ){
      List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(userId);
         return new ResponseEntity<>(userServerDetails,HttpStatus.OK);
     }
 
+
+    @PostMapping("/createUserWithCSV")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> createUserWithCSV(@RequestParam ("file") MultipartFile file){
+
+        List<String> response = new ArrayList<>();
+        try {
+            BufferedReader fileReader= new BufferedReader(new InputStreamReader(file.getInputStream()));
+            CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for(CSVRecord csvRecord : csvRecords){
+                UserDetail user=new UserDetail();
+                user.setName(csvRecord.get("name"));
+                user.setEmail(csvRecord.get("email"));
+                user.setProject(csvRecord.get("project"));
+                user.setPassword("123456");
+
+
+                try{
+                    UserDetail userDetail= userService.addUserDetail(user);
+                    response.add("Created User "+userDetail.getName()+"with id:"+userDetail.getEmail());
+                }
+                catch (Exception e){
+                    response.add("Unable to create User "+e.getMessage());
+                }
+            }
+        }catch (IOException e){
+
+        }
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/createUserServerWithCSV")
+    public ResponseEntity<?> createServerWithCSV(@RequestParam ("file") MultipartFile file) throws IOException {
+
+        List<String> response = new ArrayList<>();
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+        Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+        for (CSVRecord csvRecord : csvRecords) {
+            UserServerDetail userServerDetail = new UserServerDetail();
+            userServerDetail.setDbServerPort(csvRecord.get("DbServerPort"));
+            userServerDetail.setAppServerPort(csvRecord.get("AppServerPort"));
+            userServerDetail.setAppUserPassword(csvRecord.get("AppUserPassword"));
+            userServerDetail.SetServerIp(csvRecord.get("ServerIp"));
+
+
+            try {
+                UserServerDetail serverDetail= userService.addUserServerDetail(userServerDetail);
+                response.add("Created Server  " +serverDetail + "with id:" + serverDetail.getServerIp());
+            } catch (Exception e) {
+                response.add("Unable to created Server  " +userServerDetail.getServerIp() + e.getMessage());
+            }
+
+
+
+
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 
 }

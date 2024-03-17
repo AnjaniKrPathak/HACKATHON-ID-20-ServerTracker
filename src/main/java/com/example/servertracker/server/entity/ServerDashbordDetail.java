@@ -25,4 +25,57 @@ public class ServerDashbordDetail {
     private String serverIp;
     @Column(name = "LIVE_BILLING_CATALOG")
     private String liveBillingCatalog;
+
+    @Column(name = "APP_SERVER_STATUS")
+    private String appServerStatus;
+
+
+    public String getDbTableSpaceOccupyPerc() {
+        return dbTableSpaceOccupyPerc;
+    }
+
+    public void setDbTableSpaceOccupyPerc(String dbTableSpaceOccupyPerc) {
+        this.dbTableSpaceOccupyPerc = dbTableSpaceOccupyPerc;
+    }
+
+    public String getAppSpaceUsedPerc() {
+        return appSpaceUsedPerc;
+    }
+
+    public void setAppSpaceUsedPerc(String appSpaceUsedPerc) {
+        this.appSpaceUsedPerc = appSpaceUsedPerc;
+    }
+
+    public String getServerCacheStatus() {
+        return serverCacheStatus;
+    }
+
+    public void setServerCacheStatus(String serverCacheStatus) {
+        this.serverCacheStatus = serverCacheStatus;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public String getLiveBillingCatalog() {
+        return liveBillingCatalog;
+    }
+
+    public void setLiveBillingCatalog(String liveBillingCatalog) {
+        this.liveBillingCatalog = liveBillingCatalog;
+    }
+
+    public String getAppServerStatus() {
+        return appServerStatus;
+    }
+
+    public void setAppServerStatus(String appServerStatus) {
+        this.appServerStatus = appServerStatus;
+    }
+
 }
