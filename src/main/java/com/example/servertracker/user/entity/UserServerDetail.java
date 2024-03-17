@@ -13,7 +13,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "USER_SERVER_DETAIL")
-public class UserServerDetail {
+public class UserServerDetail  {
+
     @Id
     @Column(name = "SERVER_ID")
     @SequenceGenerator(name="user_server_generator", sequenceName="USER_SERVER_DETAIL_SEQ", allocationSize=1)
