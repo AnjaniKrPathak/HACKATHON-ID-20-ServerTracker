@@ -142,7 +142,8 @@ public class UserController {
     }
 
     @PostMapping("/createUserServerWithCSV")
-    public ResponseEntity<?> createServerWithCSV(@RequestParam ("file") MultipartFile file) throws IOException {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> createServerWithCSV(@RequestParam ("file") MultipartFile file,@RequestParam Long userId) throws IOException {
 
         List<String> response = new ArrayList<>();
         BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream()));

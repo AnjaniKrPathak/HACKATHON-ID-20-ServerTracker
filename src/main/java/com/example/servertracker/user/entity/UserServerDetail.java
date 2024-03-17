@@ -36,7 +36,7 @@ public class UserServerDetail  {
     private String dbServerPort;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ,nullable = false)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ,nullable = true)
     private UserDetail user;
 
     public void SetServerIp(String serverIp) {
