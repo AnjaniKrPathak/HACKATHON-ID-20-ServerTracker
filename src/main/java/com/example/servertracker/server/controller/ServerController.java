@@ -36,6 +36,23 @@ public class ServerController {
 
     }
 
+    @GetMapping("/getAndSaveServerPocAMCacheDetail")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> getAndsaveServerPocAMCacheDetail(){
+        List<UserServerDetail> userServerDetailsList = userService.getAllUserServer();
+        ServerPocAmCacheDetail serverPocAmCacheDetail;
+        ServerPocAmCacheDetail caheDetail=null;
+        for(UserServerDetail userServerDetail : userServerDetailsList){
+            serverPocAmCacheDetail =serverService.getServerPocAMStatus(userServerDetail.getServerIp());
+            System.out.println("POC AM Cache getAndsaveServerPocAMCacheDetail, serverPocAmCacheDetail: "+serverPocAmCacheDetail);
+             caheDetail= serverService.saveServerPocAMCachedetail(serverPocAmCacheDetail);
+            System.out.println("POC AM Cache getAndsaveServerPocAMCacheDetail, caheDetail: "+caheDetail);
+        }
+
+        return new ResponseEntity<>(caheDetail, HttpStatus.OK);
+
+    }
+
     @PostMapping("/saveServerDbTableSpaceDetail")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> saveServerDbTableSpaceDetail(@RequestBody ServerDbTableSpaceDetail serverDbTableSpaceDetail){
@@ -86,7 +103,7 @@ public class ServerController {
     @GetMapping("/getAllDBServer")
     @CrossOrigin(origins = "http://localhost:3000")
 //    public List<UserServerDetail> getUserServerDetail(){
-    public ResponseEntity<?> getDBServerDetail() throws Exception {
+    public ResponseEntity<?> getDBServerDetail() {
         Map<String, DBConnectionInfo> hashMap = getDBDetailsMap();
         StringBuilder result = new StringBuilder();
 
@@ -101,11 +118,18 @@ public class ServerController {
         result = new StringBuilder();
         List<ServerDbTableSpaceDetail> serverDbTableSpaceDetailList = new ArrayList<>();
         ServerDbTableSpaceDetail serverDbTableSpaceDetail = null;
+        DBConnectionInfo value=null;
         while (iterator.hasNext()) {
-            Map.Entry<String, DBConnectionInfo> entry = (Map.Entry<String, DBConnectionInfo>) iterator.next();
-            String key = entry.getKey();
-            DBConnectionInfo value = entry.getValue();
-            serverService.saveServerDbTableSpaceDetail(getDBSpaceDetailsInfo(value.getUrl(), value.getUserName(), value.getServerName()));
+            try {
+                Map.Entry<String, DBConnectionInfo> entry = (Map.Entry<String, DBConnectionInfo>) iterator.next();
+                String key = entry.getKey();
+                value = entry.getValue();
+                serverService.saveServerDbTableSpaceDetail(getDBSpaceDetailsInfo(value.getUrl(), value.getUserName(), value.getServerName()));
+            }catch (Exception e){
+                System.out.println("Server NOT RESPONDING***"+ value.getServerId()+", Server Name: "+value.getServerName());
+            }
+
+
             System.out.println(" Server Name: " + value.getServerName());
             System.out.println(" Server ID: " + value.getServerId());
         }
