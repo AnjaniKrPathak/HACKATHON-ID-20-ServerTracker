@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import com.jcraft.jsch.*;
 
+
 import static com.example.servertracker.server.repo.ConfigDataSource.getDBSpaceDetailsInfo;
 
 @RestController
@@ -252,11 +253,7 @@ public class ServerController {
 //               result=result.append(loginURL+" Unable to reach");
             }
             result=result.append(loginURL+": "+statusServer).append("\n");
-            if(isActive){
-                serverDashbordDetail.setAppServerStatus("Active");
-            }else{
-                serverDashbordDetail.setAppServerStatus("In-Active");
-            }
+
 
             //Save Server status
             serverService.saveServerDashbordDetail(serverDashbordDetail);
@@ -425,5 +422,6 @@ public class ServerController {
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
     }
+
 
 }

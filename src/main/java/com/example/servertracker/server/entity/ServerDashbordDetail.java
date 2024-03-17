@@ -23,6 +23,17 @@ public class ServerDashbordDetail {
     private String serverCacheStatus;
     @Column(name = "SERVER_IP")
     private String serverIp;
+
+    public ServerDashbordDetail(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public ServerDashbordDetail(String serverIp, String appServerStatus) {
+
+        this.serverIp = serverIp;
+        this.appServerStatus = appServerStatus;
+    }
+
     @Column(name = "LIVE_BILLING_CATALOG")
     private String liveBillingCatalog;
 

@@ -1,5 +1,7 @@
 package com.example.servertracker.user.controller;
 
+import com.example.servertracker.server.entity.ServerDashbordDetail;
+import com.example.servertracker.server.service.IServerService;
 import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
@@ -26,6 +28,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     IUserService userService;
+    @Autowired
+    IServerService serverService;
 
     @GetMapping("/test")
     public String testUser() {
@@ -80,6 +84,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUserServer(@RequestBody UserServerDetail userServerDetail) {
         UserServerDetail userServerDetail1 = userService.addUserServerDetail(userServerDetail);
+        serverService.saveServerDashbordDetail(new ServerDashbordDetail(userServerDetail1.getServerIp(),"Not Available"));
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         if (userServerDetail.getServerIp() != null) {
 
