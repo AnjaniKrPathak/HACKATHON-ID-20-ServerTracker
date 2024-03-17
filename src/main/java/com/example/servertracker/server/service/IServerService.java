@@ -22,4 +22,6 @@ public interface IServerService {
     HashMap<String, ServerAppSpaceDetail> getUserServerOSInfo(List<UserServerDetail> userServers);
 
     List<ServerDashbordDetail> getServerDashbordDetail(Long userId);
+
+    ServerPocAmCacheDetail getServerPocAMStatus(String serverIp);
 }

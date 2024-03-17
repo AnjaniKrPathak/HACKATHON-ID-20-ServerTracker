@@ -13,8 +13,7 @@ import java.util.List;
 public class ConfigDataSource {
 
     @Bean
-    public static ServerDbTableSpaceDetail getDBSpaceDetailsInfo(String url, String user_name, String sever_ip) throws SQLException
-    {
+    public static ServerDbTableSpaceDetail getDBSpaceDetailsInfo(String url, String user_name, String sever_ip)   {
 
         DataSourceBuilder<?> dSB
                 = DataSourceBuilder.create();
@@ -22,7 +21,8 @@ public class ConfigDataSource {
         dSB.url(url);
         dSB.username(user_name);
         dSB.password(user_name);
-
+        ServerDbTableSpaceDetail serverDbTableSpaceDetail = null;
+        try {
         Connection connection=dSB.build().getConnection();
 //        String sqlQueryFO = "select flat_offering_id,name from poc_offering where flat_offering_id =76120000";
         String sqlsqlQueryDBSpace=    "select a.tablespace_name \"Table_Space_Name\",a.total \"SPACE_ALLOCATED\",a.total-b.free \"SPACE_USED\",b.free \"SPACE_FREE\", \n" +
@@ -39,7 +39,6 @@ public class ConfigDataSource {
 
         // Process the result set
         StringBuilder result = new StringBuilder();
-        ServerDbTableSpaceDetail serverDbTableSpaceDetail = null;
         while (resultSet.next()) {
             serverDbTableSpaceDetail=new ServerDbTableSpaceDetail();
             result.append("Server Name:").append(url).append(":  Table_Space_Name: ").append(resultSet.getInt("SPACE_ALLOCATED")).append(", SPACE_USED: ").append(resultSet.getString("SPACE_USED")).append(", SPACE_FREE: ").append(resultSet.getString("SPACE_FREE")).append(", PCT_Used: ").append(resultSet.getString("PCT_Used")).append("\n");
@@ -57,6 +56,9 @@ public class ConfigDataSource {
         resultSet.close();
         statement.close();
         connection.close();
+        }catch (Exception e){
+            System.out.println("DB Server is NOT RESPONDING ***"+sever_ip);
+        }
         return serverDbTableSpaceDetail;
     }
 }

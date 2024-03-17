@@ -12,6 +12,8 @@ import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
 import com.jcraft.jsch.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -35,12 +37,39 @@ public class ServerServiceImpl implements IServerService{
     ServerDashbordDetailRepo dashbordDetrailRepo;
     @Autowired
     IUserService userService;
-
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Override
     public ServerPocAmCacheDetail saveServerPocAMCachedetail(ServerPocAmCacheDetail serverPocAmCacheDetail) {
         serverPocAMCacheDetailRepo.saveAndFlush(serverPocAmCacheDetail);
         return serverPocAmCacheDetail;
+    }
+
+    @Override
+    public ServerPocAmCacheDetail getServerPocAMStatus(String serverIp) {
+        ServerPocAmCacheDetail serverPocAmCacheDetail;
+        String sql = "\n" +
+                "select o.name \"Cache_Name\",o.object_id \"Cache_Object\" , lv.value \"cacheStatus\", to_date(d.date_value,'dd-mm-yy') \"Created_When\" from nc_objects o , nc_params p, nc_list_values " +
+                "lv,nc_params d where parent_id =9158663745313788273 and o.object_id = p.object_id and p.attr_id =9158663977813788559 and p.list_value_id =lv.list_value_id   and d.object_id =o.object_id and d.attr_id = 62    order by name desc fetch first 1 rows only";
+        List<ServerPocAmCacheDetail> serverPocAmStatus = jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper(ServerPocAmCacheDetail.class));
+        serverPocAmCacheDetail= new ServerPocAmCacheDetail();
+        List<ServerPocAmCacheDetail> serverPocAmStatusList = new ArrayList<>();
+        for (ServerPocAmCacheDetail sv : serverPocAmStatus) {
+            serverPocAmCacheDetail.setCacheStatus(sv.getCacheStatus());
+            serverPocAmCacheDetail.setServerIp(serverIp);
+            serverPocAmCacheDetail.setCacheObject(sv.getCacheObject());
+            serverPocAmCacheDetail.setCreatedWhen(sv.getCreatedWhen());
+            serverPocAmCacheDetail.setCacheName(sv.getCacheName());
+
+            serverPocAmStatusList.add(serverPocAmCacheDetail);
+
+        }
+
+        System.out.println("POC AM Cache Details: "+serverPocAmStatusList);
+        return serverPocAmStatusList.get(0);
     }
 
     @Override
