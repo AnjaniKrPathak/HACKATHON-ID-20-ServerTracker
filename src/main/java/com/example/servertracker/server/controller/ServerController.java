@@ -10,9 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import com.jcraft.jsch.*;
 
-import static com.example.servertracker.server.repo.ConfigDataSource.getDBFlatOfferingDetails;
+import static com.example.servertracker.server.repo.ConfigDataSource.getDBSpaceDetailsInfo;
+
 @RestController
 @RequestMapping("/server")
 public class ServerController {
@@ -93,15 +99,18 @@ public class ServerController {
         // Iterate through the entries using a while loop
         System.out.println("Iterating HashMap without functional programming:" + hashMap);
         result = new StringBuilder();
+        List<ServerDbTableSpaceDetail> serverDbTableSpaceDetailList = new ArrayList<>();
+        ServerDbTableSpaceDetail serverDbTableSpaceDetail = null;
         while (iterator.hasNext()) {
             Map.Entry<String, DBConnectionInfo> entry = (Map.Entry<String, DBConnectionInfo>) iterator.next();
             String key = entry.getKey();
             DBConnectionInfo value = entry.getValue();
-            result = result.append("Server Name: ")
-                    .append(value.getServerName())
-                    .append(getDBFlatOfferingDetails(value.getUrl(), value.getUserName()));
-
+            serverService.saveServerDbTableSpaceDetail(getDBSpaceDetailsInfo(value.getUrl(), value.getUserName(), value.getServerName()));
+            System.out.println(" Server Name: " + value.getServerName());
+            System.out.println(" Server ID: " + value.getServerId());
         }
+
+        result.append("Success");
         System.out.println(" Final Result: " + result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -149,7 +158,7 @@ public class ServerController {
             DBConnectionInfo value = entry.getValue();
             result=result.append("Server Name: ")
                     .append(value.getServerName())
-                    .append(getDBFlatOfferingDetails(value.getUrl(),value.getUserName()));
+                    .append(getDBSpaceDetailsInfo(value.getUrl(),value.getUserName(), value.getServerName()));
 
         }
         System.out.println(" Final Result: "+result);
@@ -190,11 +199,15 @@ public class ServerController {
         StringBuilder result= new StringBuilder();
         ResponseEntity<String> response;
         String statusServer="";
+        ServerDashbordDetail serverDashbordDetail=null;
         for(UserServerDetail userServer:userServerDetails){
             String ipAddress=userServer.getServerIp();
+            serverDashbordDetail=new ServerDashbordDetail();
+            serverDashbordDetail.setServerIp(ipAddress);
+            Boolean isActive=false;
+
             String loginURL="http://"+ipAddress+":"+userServer.getAppServerPort()+"/login.jsp";
             System.out.println(" loginURL: "+loginURL);
-
             try {
                 response = restTemplate.getForEntity(loginURL, String.class);
                 restTemplate.getForEntity(loginURL, String.class);
@@ -204,6 +217,7 @@ public class ServerController {
                 System.out.println("Status of Server:"+statusServer);
                 if (response.getStatusCode().is2xxSuccessful()) {
                     System.out.println("Server is up and running.");
+                    isActive=true;
                 } else {
                     System.out.println("Server is not responding or experiencing issues.");
                 }
@@ -214,8 +228,18 @@ public class ServerController {
 //               result=result.append(loginURL+" Unable to reach");
             }
             result=result.append(loginURL+": "+statusServer).append("\n");
+            if(isActive){
+                serverDashbordDetail.setAppServerStatus("Active");
+            }else{
+                serverDashbordDetail.setAppServerStatus("In-Active");
+            }
+
+            //Save Server status
+            serverService.saveServerDashbordDetail(serverDashbordDetail);
         }
 
+
+//        saveServerDashbordDetail(ServerDashbordDetail dashbordDetail) {
         System.out.println(" Final Result: "+result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -311,5 +335,71 @@ public class ServerController {
     }
 
 
+    @GetMapping("/getAllDBServer/user/{userId}")
+    public ResponseEntity<?> getUserServerDetailByUserId(@PathVariable String userId) throws Exception {
+        StringBuilder  result=new StringBuilder();
+        if(userId == null){
+            result.append("Server IP address is null :"+userId);
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        List<UserServerDetail> userServerDetails=userService.getUserServerBasedOnUserId(Long.parseLong(userId));
+        //Just for testing
+     /*   List<UserServerDetail> userServerDetails=new ArrayList<>();
+            UserServerDetail us=new UserServerDetail();
+            us.SetServerIp("10.109.35.199");
+            us.SetDbUserName("U32_C5_6400");
+            us.SetDbUserPassword("U32_C5_6400");
+        userServerDetails.add(us);
+        System.out.println(" Value Hard Coded for user: "+userId);*/
+
+
+        Map<String, DBConnectionInfo> hashMap=getDBDetailsMapByIPAddress(userServerDetails);
+        // Get the set of entries from the HashMap
+        Set<Map.Entry<String, DBConnectionInfo>> entrySet = hashMap.entrySet();
+
+        // Create an iterator for the entry set
+        Iterator iterator = entrySet.iterator();
+
+        // Iterate through the entries using a while loop
+        System.out.println("Iterating HashMap without functional programming:"+hashMap);
+        result=new StringBuilder();
+        while (iterator.hasNext()) {
+            Map.Entry<String, DBConnectionInfo> entry = (Map.Entry<String, DBConnectionInfo>) iterator.next();
+            String key = entry.getKey();
+            DBConnectionInfo value = entry.getValue();
+            serverService.saveServerDbTableSpaceDetail(getDBSpaceDetailsInfo(value.getUrl(), value.getUserName(), value.getServerName()));
+            System.out.println(" Server Name: " + value.getServerName());
+            System.out.println(" Server ID: " + value.getServerId());
+        }
+
+        result.append("Success");
+        System.out.println(" Final Result: " + result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/serverOsSpaceInfo")
+    public ResponseEntity<?> getOSInfo(){
+        List<UserServerDetail> userServerDetails=userService.getAllUserServer();
+//        System.out.println(" getOSInfo: "+userServerDetails);
+        HashMap<String, ServerAppSpaceDetail> serverOSInfoMap= serverService.getUserServerOSInfo(userServerDetails);
+
+        //updating DB
+//        serverOSInfoMap.forEach((key, value)->serverService.saveServerAppSpaceDetail((ServerAppSpaceDetail) value));
+
+        Map<String,Object> map=new LinkedHashMap<String,Object>();
+        System.out.println(" APP Server Info: "+serverOSInfoMap);
+        if(!serverOSInfoMap.isEmpty()){
+            map.put("status", 1);
+            map.put("data",serverOSInfoMap);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
+        else {
+            map.clear();
+            map.put("status",0);
+            map.put("message","No Data Found");
+            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

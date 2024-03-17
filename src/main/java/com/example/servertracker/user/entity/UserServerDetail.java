@@ -1,14 +1,14 @@
 package com.example.servertracker.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -34,8 +34,9 @@ public class UserServerDetail  {
     private String appServerPort;
     @Column(name = "DB_SERVER_PORT")
     private String dbServerPort;
+
     @ManyToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ,nullable = false)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID" ,nullable = true)
     private UserDetail user;
 
     public void SetServerIp(String serverIp) {
@@ -48,4 +49,75 @@ public class UserServerDetail  {
         this.dbUserPassword=dbUserPassword;
     }
 
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public String getDbUserName() {
+        return dbUserName;
+    }
+
+    public void setDbUserName(String dbUserName) {
+        this.dbUserName = dbUserName;
+    }
+
+    public String getDbUserPassword() {
+        return dbUserPassword;
+    }
+
+    public void setDbUserPassword(String dbUserPassword) {
+        this.dbUserPassword = dbUserPassword;
+    }
+
+    public String getAppUserName() {
+        return appUserName;
+    }
+
+    public void setAppUserName(String appUserName) {
+        this.appUserName = appUserName;
+    }
+
+    public String getAppUserPassword() {
+        return appUserPassword;
+    }
+
+    public void setAppUserPassword(String appUserPassword) {
+        this.appUserPassword = appUserPassword;
+    }
+
+    public String getAppServerPort() {
+        return appServerPort;
+    }
+
+    public void setAppServerPort(String appServerPort) {
+        this.appServerPort = appServerPort;
+    }
+
+    public String getDbServerPort() {
+        return dbServerPort;
+    }
+
+    public void setDbServerPort(String dbServerPort) {
+        this.dbServerPort = dbServerPort;
+    }
+
+    public UserDetail getUser() {
+        return user;
+    }
+
+    public void setUser(UserDetail user) {
+        this.user = user;
+    }
 }

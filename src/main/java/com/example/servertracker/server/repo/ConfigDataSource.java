@@ -1,5 +1,6 @@
 package com.example.servertracker.server.repo;
 
+import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 
@@ -7,11 +8,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class ConfigDataSource {
 
     @Bean
-    public static StringBuilder getDBFlatOfferingDetails(String url, String user_name) throws SQLException
+    public static ServerDbTableSpaceDetail getDBSpaceDetailsInfo(String url, String user_name, String sever_ip) throws SQLException
     {
 
         DataSourceBuilder<?> dSB
@@ -27,7 +29,7 @@ public class ConfigDataSource {
                 "trunc(((a.total-b.free)/a.total)*100) \"PCT_Used\" from \n" +
                 "(select tablespace_name,sum(bytes/1024/1024) Total from dba_data_files group by tablespace_name) a, \n" +
                 "(select tablespace_name,sum(bytes/1024/1024) Free from dba_free_space group by tablespace_name) b \n" +
-                "where a.tablespace_name=b.tablespace_name";
+                "where a.tablespace_name=b.tablespace_name  and a.tablespace_name=\'NC_DATA\'";
 
         // Create a statement
         Statement statement = connection.createStatement();
@@ -37,14 +39,24 @@ public class ConfigDataSource {
 
         // Process the result set
         StringBuilder result = new StringBuilder();
+        ServerDbTableSpaceDetail serverDbTableSpaceDetail = null;
         while (resultSet.next()) {
+            serverDbTableSpaceDetail=new ServerDbTableSpaceDetail();
             result.append("Server Name:").append(url).append(":  Table_Space_Name: ").append(resultSet.getInt("SPACE_ALLOCATED")).append(", SPACE_USED: ").append(resultSet.getString("SPACE_USED")).append(", SPACE_FREE: ").append(resultSet.getString("SPACE_FREE")).append(", PCT_Used: ").append(resultSet.getString("PCT_Used")).append("\n");
+            serverDbTableSpaceDetail.setDbTableSpaceName(""+resultSet.getString("Table_Space_Name"));
+            serverDbTableSpaceDetail.setSpaceUsed(Double.parseDouble(""+resultSet.getString("SPACE_USED")));
+            serverDbTableSpaceDetail.setSpaceFree(Double.parseDouble(""+resultSet.getString("SPACE_FREE")));
+            serverDbTableSpaceDetail.setServerIp(sever_ip);
+            serverDbTableSpaceDetail.setPctUsed(Double.parseDouble(resultSet.getString("PCT_Used")));
+            serverDbTableSpaceDetail.setSpaceAllocated(resultSet.getInt("SPACE_ALLOCATED"));
         }
+        System.out.println(" Final Result Model: " + serverDbTableSpaceDetail);
+        System.out.println(" Final Result DB: " + result);
 
         // Close resources
         resultSet.close();
         statement.close();
         connection.close();
-        return result;
+        return serverDbTableSpaceDetail;
     }
 }

@@ -27,4 +27,61 @@ public class ServerDbTableSpaceDetail {
     private double spaceUsed;
     @Column(name = "SPACE_FREE")
     private double spaceFree;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDbTableSpaceName() {
+        return dbTableSpaceName;
+    }
+
+    public void setDbTableSpaceName(String dbTableSpaceName) {
+        this.dbTableSpaceName = dbTableSpaceName;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public double getPctUsed() {
+        return pctUsed;
+    }
+
+    public void setPctUsed(double pctUsed) {
+        this.pctUsed = pctUsed;
+    }
+
+    public double getSpaceAllocated() {
+        return spaceAllocated;
+    }
+
+    public void setSpaceAllocated(double spaceAllocated) {
+        this.spaceAllocated = spaceAllocated;
+    }
+
+    public double getSpaceUsed() {
+        return spaceUsed;
+    }
+
+    public void setSpaceUsed(double spaceUsed) {
+        this.spaceUsed = spaceUsed;
+    }
+
+    public double getSpaceFree() {
+        return spaceFree;
+    }
+
+    public void setSpaceFree(double spaceFree) {
+        this.spaceFree = spaceFree;
+    }
+
+
 }
