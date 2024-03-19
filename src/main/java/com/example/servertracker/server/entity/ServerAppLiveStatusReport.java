@@ -1,15 +1,21 @@
 package com.example.servertracker.server.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServerAppLiveStatusReport {
-    private  int totalServer;
-    private int liveServeCount;
-    private int downServerCount;
+@Getter
+@Setter
+public class ServerAppLiveStatusReport implements Serializable {
 
+    private String serverStaus;
+    private int count;
+
+
+    public ServerAppLiveStatusReport(String serverStaus) {
+        this.serverStaus = serverStaus;
+    }
 }

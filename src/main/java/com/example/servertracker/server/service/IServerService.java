@@ -1,9 +1,6 @@
 package com.example.servertracker.server.service;
 
-import com.example.servertracker.server.entity.ServerAppSpaceDetail;
-import com.example.servertracker.server.entity.ServerDashbordDetail;
-import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
-import com.example.servertracker.server.entity.ServerPocAmCacheDetail;
+import com.example.servertracker.server.entity.*;
 import com.example.servertracker.user.entity.UserServerDetail;
 
 import java.util.HashMap;
@@ -24,4 +21,6 @@ public interface IServerService {
     List<ServerDashbordDetail> getServerDashbordDetail(Long userId);
 
     ServerPocAmCacheDetail getServerPocAMStatus(String serverIp);
+
+   List<ServerAppLiveStatusReport> getServerListStatusReport(Long userId);
 }

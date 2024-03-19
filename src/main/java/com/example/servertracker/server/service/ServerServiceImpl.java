@@ -1,13 +1,7 @@
 package com.example.servertracker.server.service;
 
-import com.example.servertracker.server.entity.ServerAppSpaceDetail;
-import com.example.servertracker.server.entity.ServerDashbordDetail;
-import com.example.servertracker.server.entity.ServerDbTableSpaceDetail;
-import com.example.servertracker.server.entity.ServerPocAmCacheDetail;
-import com.example.servertracker.server.repo.ServerAppSpaceDetailRepo;
-import com.example.servertracker.server.repo.ServerDashbordDetailRepo;
-import com.example.servertracker.server.repo.ServerDbTableSpaceDetailRepo;
-import com.example.servertracker.server.repo.ServerPocAMCacheDetailRepo;
+import com.example.servertracker.server.entity.*;
+import com.example.servertracker.server.repo.*;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
 import com.jcraft.jsch.*;
@@ -39,6 +33,8 @@ public class ServerServiceImpl implements IServerService{
     IUserService userService;
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    IServerDao dashbordDao;
 
     @Override
     public ServerPocAmCacheDetail saveServerPocAMCachedetail(ServerPocAmCacheDetail serverPocAmCacheDetail) {
@@ -70,6 +66,12 @@ public class ServerServiceImpl implements IServerService{
 
         System.out.println("POC AM Cache Details: "+serverPocAmStatusList);
         return serverPocAmStatusList.get(0);
+    }
+
+    @Override
+    public List<ServerAppLiveStatusReport> getServerListStatusReport(Long userId) {
+        List<ServerAppLiveStatusReport> statusReport=dashbordDao.serverListStatusReport(userId);
+        return statusReport;
     }
 
     @Override

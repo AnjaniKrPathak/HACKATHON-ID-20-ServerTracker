@@ -291,7 +291,7 @@ public class ServerController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> getServerLiveStatusReport(@RequestParam Long userId){
         List<ServerAppLiveStatusReport> serverAppLiveStatusDetails=new ArrayList<>();
-        serverAppLiveStatusDetails.add(new ServerAppLiveStatusReport(10,6,4));
+        serverAppLiveStatusDetails.add(new ServerAppLiveStatusReport("6"));
         Map<String,Object> mapLiveStatus=new LinkedHashMap<String,Object>();
         if(!serverAppLiveStatusDetails.isEmpty()){
 
@@ -422,6 +422,31 @@ public class ServerController {
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/getServerLiveStatusReprot")
+    public ResponseEntity<?> getServerListStatusReport(@RequestParam Long userId){
+       List<ServerAppLiveStatusReport> liveStatusList =serverService.getServerListStatusReport(userId);
+        HashMap<String,Integer> appstatusreport =new HashMap<>();
+        for(ServerAppLiveStatusReport liveStatus:liveStatusList){
+            appstatusreport.put(liveStatus.getServerStaus(),liveStatus.getCount());
+        }
+
+        Map<String,Object> map=new LinkedHashMap<String,Object>();
+        System.out.println(" APP Server Info: "+appstatusreport);
+        if(!appstatusreport.isEmpty()){
+            map.put("status", HttpStatus.OK.value());
+            map.put("data",appstatusreport);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
+        else {
+            map.clear();
+            map.put("status",0);
+            map.put("message","No Data Found");
+            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+
 
 
 }
