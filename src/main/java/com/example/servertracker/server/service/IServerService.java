@@ -23,4 +23,8 @@ public interface IServerService {
     ServerPocAmCacheDetail getServerPocAMStatus(String serverIp);
 
    List<ServerAppLiveStatusReport> getServerListStatusReport(Long userId);
+
+    List<ServerAppSpaceReport> appStatusReprot(Long userId);
+
+    List<ServerAppDbSpaceReport> dbStatusReprot(Long userId);
 }

@@ -8,8 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ServerAppSpaceReport {
-    private int totalServer;
-    private int appSpaceGreen;
-    private int appSpaceYellow;
-    private int appSpaceRed;
+   private int appSpaceUsed;
 }

@@ -13,6 +13,7 @@ public class ServerAppLiveStatusReport implements Serializable {
 
     private String serverStaus;
     private int count;
+    private int totalCount;
 
 
     public ServerAppLiveStatusReport(String serverStaus) {

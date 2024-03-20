@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerAppDbSpaceReport {
-    private int totalServer;
-    private int dbSpaceGreen;
-    private int dbSpaceYellow;
-    private int dbSpaceRed;
+    private int dbSpaceUsed;
 
 }

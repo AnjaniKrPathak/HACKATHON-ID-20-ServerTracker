@@ -75,6 +75,16 @@ public class ServerServiceImpl implements IServerService{
     }
 
     @Override
+    public List<ServerAppSpaceReport> appStatusReprot(Long userId) {
+        return dashbordDao.appStatusSpaceReport(userId);
+    }
+
+    @Override
+    public List<ServerAppDbSpaceReport> dbStatusReprot(Long userId) {
+        return dashbordDao.dbSpaceServerReport(userId);
+    }
+
+    @Override
     public ServerDbTableSpaceDetail saveServerDbTableSpaceDetail(ServerDbTableSpaceDetail serverDbTableSpaceDetail) {
         return  spaceDetailRepo.saveAndFlush(serverDbTableSpaceDetail);
     }
