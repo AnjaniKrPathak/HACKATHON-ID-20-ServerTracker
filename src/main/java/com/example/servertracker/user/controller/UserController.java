@@ -7,6 +7,7 @@ import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserRole;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
+import jakarta.validation.Valid;
 import org.apache.catalina.User;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -14,6 +15,8 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,10 +45,18 @@ public class UserController {
     @PostMapping("/addUSer")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> addUser(@RequestBody UserDetail userDetail) {
-
-        UserDetail ud = userService.addUserDetail(userDetail);
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        if (ud.getEmail() != null) {
+        UserDetail existedUser=userService.findUserByEmail(userDetail.getEmail());
+        if(existedUser !=null && existedUser.getEmail()!=null &&!existedUser.getEmail().isEmpty()){
+            map.clear();
+            map.put("status", HttpStatus.FORBIDDEN.value());
+            map.put("message", "User Not Added "+existedUser.getEmail() +" Already Exist");
+            return new ResponseEntity<>(map, HttpStatus.NOT_ACCEPTABLE);
+
+        }
+        UserDetail ud = userService.addUserDetail(userDetail);
+
+        if (ud.getEmail() != null ) {
 
 
             map.put("statusCode", HttpStatus.OK.value());
@@ -54,7 +65,7 @@ public class UserController {
         } else {
             map.clear();
             map.put("status", 0);
-            map.put("message", "Server Not Added");
+            map.put("message", "User Not Added ");
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
 
