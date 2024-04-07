@@ -2,7 +2,9 @@ package com.example.servertracker.user.controller;
 
 import com.example.servertracker.server.entity.ServerDashbordDetail;
 import com.example.servertracker.server.service.IServerService;
+import com.example.servertracker.user.dto.UserDto;
 import com.example.servertracker.user.entity.UserDetail;
+import com.example.servertracker.user.entity.UserRole;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.service.IUserService;
 import org.apache.catalina.User;
@@ -184,6 +186,40 @@ public class UserController {
         }
         return null;
     }
+
+    @GetMapping("/findUserByEmail")
+    public ResponseEntity<?> findUserByEmail(@RequestParam String email){
+        UserDetail userDetail=userService.findUserByEmail(email);
+        return new ResponseEntity<>(userDetail,HttpStatus.OK);
+    }
+    @GetMapping("/findRoleByName")
+    public ResponseEntity<?> findRoleByRoleName(@RequestParam String roleName){
+        UserRole userRole=userService.findRoleByRoleName(roleName);
+        return new ResponseEntity<>(userRole,HttpStatus.OK);
+    }
+
+    @GetMapping("/findUserByUserNameAndPssword")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> findUserByUserNameAndPassword(@RequestParam String userName,@RequestParam String password){
+        UserDetail userDetail=userService.findUserByEmailAndPassword(userName,password);
+        System.out.println("User Detail "+userDetail);
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        if (userDetail!= null) {
+
+
+            map.put("statusCode", HttpStatus.OK.value());
+            map.put("data", userDetail);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } else {
+            map.clear();
+            map.put("status", HttpStatus.NOT_FOUND.value());
+            map.put("message", "User Not Found");
+            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
 
 
 

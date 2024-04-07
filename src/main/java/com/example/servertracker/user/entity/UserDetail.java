@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,7 +28,7 @@ public class UserDetail {
         this.id = id;
     }
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL",nullable = false,unique = true)
     private String email;
     @Column(name = "PROJECT")
     private String project;
@@ -37,6 +38,10 @@ public class UserDetail {
     private String password;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<UserServerDetail> userServerList;
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles" ,joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
+            inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
+    private List<UserRole> userRoles;
 
 
 }

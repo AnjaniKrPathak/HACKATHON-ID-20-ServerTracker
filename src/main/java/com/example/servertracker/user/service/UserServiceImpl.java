@@ -2,25 +2,53 @@ package com.example.servertracker.user.service;
 
 import com.example.servertracker.server.entity.ServerDashbordDetail;
 import com.example.servertracker.user.entity.UserDetail;
+import com.example.servertracker.user.entity.UserRole;
 import com.example.servertracker.user.entity.UserServerDetail;
 import com.example.servertracker.user.repo.UserDetailRepo;
+import com.example.servertracker.user.repo.UserRoleRepo;
 import com.example.servertracker.user.repo.UserServerDetailRepo;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+@NoArgsConstructor
 
 @Service
 public class UserServiceImpl implements IUserService{
-   @Autowired
+
+
+  @Autowired
     UserDetailRepo userDetailRepo;
-   @Autowired
+    @Autowired
     UserServerDetailRepo userServerDetailRepo;
+    @Autowired
+    UserRoleRepo userRoleRepo;
+
+
     @Override
     public UserDetail addUserDetail(UserDetail userDetail) {
+        UserDetail ud=new UserDetail();
+        ud.setName(userDetail.getName());
+        userDetail.setEmail(userDetail.getEmail());
+        userDetail.setPassword(userDetail.getPassword());
+        UserRole userRole=userRoleRepo.findByRoleName("ROLE_ADMIN");
+        if(userRole==null){
+            userRole = checkRoleExist();
+
+        }
+
+        userDetail.setUserRoles(Arrays.asList(userRole));
         return userDetailRepo.saveAndFlush(userDetail);
+    }
+
+    private UserRole checkRoleExist() {
+      UserRole userRole=new UserRole();
+        userRole.setRoleName("ROLE_ADMIN");
+        return userRoleRepo.save(userRole);
     }
 
     @Override
@@ -30,6 +58,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public UserServerDetail addUserServerDetail(UserServerDetail userServerDetail) {
+
 
         return userServerDetailRepo.save(userServerDetail);
     }
@@ -53,5 +82,21 @@ public class UserServiceImpl implements IUserService{
 
         }
         return null;
+    }
+
+    @Override
+    public UserDetail findUserByEmail(String email) {
+
+        return userDetailRepo.findByEmail(email);
+    }
+
+    @Override
+    public UserRole findRoleByRoleName(String roleName) {
+        return userRoleRepo.findByRoleName(roleName);
+    }
+
+    @Override
+    public UserDetail findUserByEmailAndPassword(String userName, String password) {
+        return userDetailRepo.findByEmailAndPassword(userName,password);
     }
 }
