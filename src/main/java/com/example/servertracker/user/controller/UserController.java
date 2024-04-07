@@ -13,6 +13,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -95,10 +96,26 @@ public class UserController {
 
     @PostMapping("/addUserServer")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<?> addUserServer(@RequestBody UserServerDetail userServerDetail) {
-        UserServerDetail userServerDetail1 = userService.addUserServerDetail(userServerDetail);
-        serverService.saveServerDashbordDetail(new ServerDashbordDetail(userServerDetail1.getServerIp(),"Not Available"));
+    public ResponseEntity<?> addUserServer(@RequestBody UserServerDetail userServerDetail,@RequestParam Long userId) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+        List<UserServerDetail> userServerDetails = userService.getUserServerBasedOnUserId(userId);
+
+
+
+
+        for(UserServerDetail serverDetail:userServerDetails){
+            if(serverDetail.getServerIp().equals(userServerDetail.getServerIp())){
+                map.clear();
+                map.put("status", HttpStatus.FORBIDDEN.value());
+                map.put("message", "Server : " + serverDetail.getServerIp()+ " Already added for this User.");
+                return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            }
+
+        }
+        UserServerDetail userServerDetail1 = userService.addUserServerDetail(userServerDetail,userId);
+
+
         if (userServerDetail.getServerIp() != null) {
 
 
@@ -182,7 +199,7 @@ public class UserController {
 
 
             try {
-                UserServerDetail serverDetail = userService.addUserServerDetail(userServerDetail);
+                UserServerDetail serverDetail = userService.addUserServerDetail(userServerDetail,userId);
                 //response.add("Created Server  " +serverDetail + "with id:" + serverDetail.getServerIp());
                 mapAddMultipleServer.put("statusCode", HttpStatus.OK.value());
                 mapAddMultipleServer.put("data", serverDetail);

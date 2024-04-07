@@ -1,6 +1,7 @@
 package com.example.servertracker.user.service;
 
 import com.example.servertracker.server.entity.ServerDashbordDetail;
+import com.example.servertracker.server.service.IServerService;
 import com.example.servertracker.user.entity.UserDetail;
 import com.example.servertracker.user.entity.UserRole;
 import com.example.servertracker.user.entity.UserServerDetail;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements IUserService{
     UserServerDetailRepo userServerDetailRepo;
     @Autowired
     UserRoleRepo userRoleRepo;
+    @Autowired
+    IUserService userService;
 
 
     @Override
@@ -57,10 +60,18 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public UserServerDetail addUserServerDetail(UserServerDetail userServerDetail) {
+    public UserServerDetail addUserServerDetail(UserServerDetail userServerDetail,Long userId) {
+        UserDetail userDetail=userService.findUserById(userId);
+        UserServerDetail serverDetail=new UserServerDetail();
+        serverDetail.setUser(userDetail);
+        serverDetail.setDbServerPort(userServerDetail.getDbServerPort());
+        serverDetail.setServerIp(userServerDetail.getServerIp());
+        serverDetail.setAppUserPassword(userServerDetail.getAppUserPassword());
+        serverDetail.setDbUserName(userServerDetail.getDbUserName());
+        serverDetail.setDbUserName(userServerDetail.getDbUserName());
+        serverDetail.setDbUserPassword(userServerDetail.getDbUserPassword());
 
-
-        return userServerDetailRepo.save(userServerDetail);
+        return userServerDetailRepo.save(serverDetail);
     }
 
     @Override
@@ -88,6 +99,9 @@ public class UserServiceImpl implements IUserService{
     public UserDetail findUserByEmail(String email) {
 
         return userDetailRepo.findByEmail(email);
+    }
+    public UserDetail findUserById(Long userId){
+        return userDetailRepo.findById(userId).get();
     }
 
     @Override

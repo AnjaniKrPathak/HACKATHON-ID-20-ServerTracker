@@ -13,7 +13,7 @@ public interface IUserService {
 
     UserDetail updateUserDetail(UserDetail userDetail);
 
-    UserServerDetail addUserServerDetail(UserServerDetail userServerDetail);
+    UserServerDetail addUserServerDetail(UserServerDetail userServerDetail,Long userId);
 
     List<UserServerDetail> getAllUserServer();
 
@@ -26,4 +26,5 @@ public interface IUserService {
     UserRole findRoleByRoleName(String roleName);
 
     UserDetail findUserByEmailAndPassword(String userName, String password);
+    UserDetail findUserById(Long userId);
 }
