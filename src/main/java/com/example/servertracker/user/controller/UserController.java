@@ -242,7 +242,7 @@ public class UserController {
             map.clear();
             map.put("status", HttpStatus.NOT_FOUND.value());
             map.put("message", "User Not Found");
-            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }
 
     }
